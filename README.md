@@ -85,12 +85,56 @@ Créez un fichier .env et configurez les variables suivantes :
 - STRIPE_API_KEY=your_stripe_api_key
 - PAYPAL_CLIENT_ID=your_paypal_client_id
 
-### Étape 4 : Initialisez la base de données
-npm run migrate
+### Étape 4 : Initialisez le projet
+Exécutez les commandes suivantes dans le terminal :
+````
+docker-compose build
+docker-compose up -d
+````
+#### Si tout fonctionne correctement :
+Le terminal affichera un message similaire à celui-ci :
 
-### Étape 5 : Lancez le serveur
+````
+[+] Running 3/3
+✔ Container crowd-mariadb-1   Healthy                                                                                                                       
+✔ Container crowd-backend-1   Started                                                                                                                        
+✔ Container crowd-frontend-1  Started
+````
+Dans ce cas, tout est opérationnel et donc taper le "localhost" dans votre bar de recherche.
+
+#### Si une erreur survient :
+Le terminal pourrait afficher un message comme celui-ci :
+````
+[+] Running 4/5
+✔ Network crowd_app-network    Created                                                                                                                       
+✔ Volume "crowd_mariadb_data"  Created                                                                                                                       
+- Container crowd-mariadb-1    Starting                                                                                                                      
+  ✔ Container crowd-backend-1    Created                                                                                                                       
+  ✔ Container crowd-frontend-1   Created                                                                                                                      
+  Error response from daemon: Ports are not available: exposing port TCP 0.0.0.0:3306 
+  -> 0.0.0.0:0: listen tcp4 0.0.0.0:3306: bind: Only one usage of each socket address (protocol/network address/port) is normally permitted.
+````
+  Cela signifie que le port est déjà utilisé par une autre instance ou application.
+
+##### Solution :
+Ouvrez le Gestionnaire des tâches.
+Recherchez et terminez toute tâche liée à SQL ou un processus utilisant le port.
+Par exemple, une instance de MySQL qui fonctionne en arrière-plan.
+Pour trouver les logs vous pouvez taper :
+````
+docker-compose up
+````
+Relancez les commandes une fois la tâche terminé:
+````
+docker-compose up -d
+````
+Si l'erreur persiste, assurez-vous qu'aucun autre service (comme WAMP, XAMPP, ou un serveur MySQL local) n'utilise ce port. 
+Vous pouvez aussi modifier le port utilisé par le conteneur dans le fichier docker-compose.yml, par contre il ne faute commit.
+
+### Étape 5 : Lancez le projet
 npm start
-- Le serveur sera disponible à http://localhost:3000.
+- Le site sera disponible à http://localhost.
+- Le serveur db sera disponible à http://localhost:3306.
 
 ### Fonctionnalités principales à tester
 - Créer un compte utilisateur.
